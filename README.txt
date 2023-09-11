@@ -1,28 +1,62 @@
-REMIX DEFAULT WORKSPACE
+# Team Wallet Smart Contract
 
-Remix default workspace is present when:
-i. Remix loads for the very first time 
-ii. A new workspace is created with 'Default' template
-iii. There are no files existing in the File Explorer
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-This workspace contains 3 directories:
+The Team Wallet Smart Contract is a decentralized application (DApp) designed for managing and sharing credits among the team members. This contract provides a secure and transparent way to handle transaction requests, approvals, and rejections within the team.
 
-1. 'contracts': Holds three contracts with increasing levels of complexity.
-2. 'scripts': Contains four typescript files to deploy a contract. It is explained below.
-3. 'tests': Contains one Solidity test file for 'Ballot' contract & one JS test file for 'Storage' contract.
+## Table of Contents
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Functions](#functions)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
 
-SCRIPTS
+## Getting Started
 
-The 'scripts' folder has four typescript files which help to deploy the 'Storage' contract using 'web3.js' and 'ethers.js' libraries.
+### Prerequisites
 
-For the deployment of any other contract, just update the contract's name from 'Storage' to the desired contract and provide constructor arguments accordingly 
-in the file `deploy_with_ethers.ts` or  `deploy_with_web3.ts`
+Before deploying and using the Team Wallet Smart Contract, ensure you have the following:
 
-In the 'tests' folder there is a script containing Mocha-Chai unit tests for 'Storage' contract.
+- Ethereum Wallet (e.g., MetaMask) to interact with the contract.
+- Solidity development environment for contract deployment.
+- Winning team members' Ethereum addresses.
 
-To run a script, right click on file name in the file explorer and click 'Run'. Remember, Solidity file must already be compiled.
-Output from script will appear in remix terminal.
+### Deployment
 
-Please note, require/import is supported in a limited manner for Remix supported modules.
-For now, modules supported by Remix are ethers, web3, swarmgw, chai, multihashes, remix and hardhat only for hardhat.ethers object/plugin.
-For unsupported modules, an error like this will be thrown: '<module_name> module require is not supported by Remix IDE' will be shown.
+1. Deploy the smart contract to the Ethereum blockchain using a development tool or service.
+
+2. Execute the `setWallet` function as the deployer to initialize the contract. Provide an array of winning team members' Ethereum addresses and the initial credits. Ensure the deployer's address is not part of the members' list.
+
+3. The contract is now ready for use by the team members.
+
+## Usage
+
+### Functions
+
+- `setWallet(address[] members, uint credits)`: Initializes the contract with the team members and initial credits. Only accessible by the deployer.
+
+- `spend(uint amount)`: Allows a team member to record a transaction request. Approval is recorded by default. The transaction will be recorded irrespective of the amount, even if it exceeds the available credits.
+
+- `approve(uint n)`: Enables team members to approve a transaction request. Reverts if the member has already approved or rejected the request.
+
+- `reject(uint n)`: Allows team members to reject a transaction request. Reverts if the member has already approved or rejected the request.
+
+- `credits()`: Retrieves the current available credits in the wallet. Accessible only to team members.
+
+- `viewTransaction(uint n)`: Provides details of a specific transaction request, including the amount and status (pending, debited, or failed). Accessible only to team members.
+
+- `transactionStats()`: Returns the count of debited, pending, and failed transaction requests. Accessible only to winning team members.
+
+## Examples
+
+Here are some example usages of the Team Wallet Smart Contract:
+
+- **Setting Up the Wallet:**
+  ```solidity
+  // Deployer initializes the contract
+  setWallet([0xMember1, 0xMember2, 0xMember3], 1000);
+- **Recording a Transaction Request:**
+  ```solidity
+  // Winning team member records a transaction request
+  spend(200);
